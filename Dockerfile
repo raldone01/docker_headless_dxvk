@@ -10,7 +10,7 @@ RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/
   wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key && \
   wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources && \
   apt-get update && \
-  apt-get install -y winehq-stable xorg xserver-xorg-video-dummy xvfb libvulkan1 libvulkan1:i386 vulkan-tools mesa-utils mesa-utils-extra mesa-vulkan-drivers mesa-vulkan-drivers:i386 mesa-vdpau-drivers mesa-vdpau-drivers:i386 mesa-va-drivers mesa-va-drivers:i386 && \
+  apt-get install -y file winehq-stable xorg xserver-xorg-video-dummy xvfb libvulkan1 libvulkan1:i386 vulkan-tools mesa-utils mesa-utils-extra mesa-vulkan-drivers mesa-vulkan-drivers:i386 mesa-vdpau-drivers mesa-vdpau-drivers:i386 mesa-va-drivers mesa-va-drivers:i386 && \
   debug_packages="nano strace less" && \
   apt-get install -y $debug_packages && \
   apt-get clean
@@ -53,6 +53,7 @@ RUN \
   curl -L 'https://gitlab.melroy.org/melroy/winegui/uploads/c4db93700d13dfb71997f28c2965aeb7/dxvk-test.tar.gz' -o triangle.tar.gz && \
   mkdir -p /tmp/d3d11-triangle/dxvk-test && \
   tar -xzf triangle.tar.gz -C /tmp/d3d11-triangle/dxvk-test && \
+  #64bit
   mv dxvk-test /usr/local/bin/d3d11-triangle && \
   rm -rf /tmp/d3d11-triangle
 
