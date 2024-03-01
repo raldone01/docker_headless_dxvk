@@ -1,19 +1,11 @@
-FROM debian:bookworm
+FROM archlinux:latest
 
-RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
-  export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true && \
-  sed -i -e's/ main/ main contrib non-free non-free-firmware/g' /etc/apt/sources.list.d/debian.sources && \
-  dpkg --add-architecture i386 && \
-  mkdir -pm755 /etc/apt/keyrings && \
-  apt-get update && \
-  apt-get install -y gnupg2 wget curl ca-certificates && \
-  wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key && \
-  wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources && \
-  apt-get update && \
-  apt-get install -y file winehq-stable xorg xserver-xorg-video-dummy xvfb libvulkan1 libvulkan1:i386 vulkan-tools mesa-utils mesa-utils-extra mesa-vulkan-drivers mesa-vulkan-drivers:i386 mesa-vdpau-drivers mesa-vdpau-drivers:i386 mesa-va-drivers mesa-va-drivers:i386 && \
-  debug_packages="nano strace less" && \
-  apt-get install -y $debug_packages && \
-  apt-get clean
+RUN --mount=type=cache,target=/var/cache/pacman \
+  echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf && \
+  pacman -Syu --noconfirm && \
+  pacman -S --noconfirm --needed vulkan-swrast mesa mesa-utils base-devel wget curl gnupg xorg-server xf86-video-dummy xorg-server-xvfb lib32-vulkan-icd-loader vulkan-icd-loader vulkan-tools mesa mesa-demos wine-staging wine-gecko wine-mono dosbox gnutls lib32-gnutls lib32-gst-plugins-base lib32-gst-plugins-base-libs lib32-gst-plugins-good lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 libpulse libxcomposite libxinerama opencl-icd-loader pcsclite samba sane sdl2 unixodbc v4l-utils wine-gecko wine-mono && \
+  # Debugging tools
+  pacman -S --noconfirm nano strace less
 
 # Download and install dxvk
 RUN \
