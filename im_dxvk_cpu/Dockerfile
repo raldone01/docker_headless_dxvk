@@ -3,9 +3,9 @@ FROM archlinux:latest
 RUN --mount=type=cache,target=/var/cache/pacman \
   echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf && \
   pacman -Syu --noconfirm && \
-  pacman -S --noconfirm --needed vulkan-swrast mesa mesa-utils base-devel wget curl gnupg xorg-server xf86-video-dummy xorg-server-xvfb lib32-vulkan-icd-loader vulkan-icd-loader vulkan-tools mesa mesa-demos wine-staging wine-gecko wine-mono dosbox gnutls lib32-gnutls lib32-gst-plugins-base lib32-gst-plugins-base-libs lib32-gst-plugins-good lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 libpulse libxcomposite libxinerama opencl-icd-loader pcsclite samba sane sdl2 unixodbc v4l-utils wine-gecko wine-mono && \
+  pacman -S --noconfirm --needed x11vnc vulkan-swrast mesa mesa-utils base-devel wget curl gnupg xorg-server xf86-video-dummy xorg-server-xvfb lib32-vulkan-icd-loader vulkan-icd-loader vulkan-tools mesa mesa-demos wine-staging wine-gecko wine-mono dosbox gnutls lib32-gnutls lib32-gst-plugins-base lib32-gst-plugins-base-libs lib32-gst-plugins-good lib32-libpulse lib32-libxcomposite lib32-libxinerama lib32-opencl-icd-loader lib32-pcsclite lib32-sdl2 lib32-v4l-utils libgphoto2 libpulse libxcomposite libxinerama opencl-icd-loader pcsclite samba sane sdl2 unixodbc v4l-utils wine-gecko wine-mono && \
   # Debugging tools
-  pacman -S --noconfirm nano strace less
+  pacman -S --noconfirm nano strace less net-tools tcpdump xorg-xeyes xorg-xrandr
 
 # Download and install dxvk
 RUN \
@@ -48,6 +48,11 @@ RUN \
   #64bit
   mv dxvk-test /usr/local/bin/d3d11-triangle && \
   rm -rf /tmp/d3d11-triangle
+
+# install vkcube
+RUN \
+  curl -L 'https://github.com/raldone01/vkcube/releases/download/v1.0.0/vkcube-linux' -o /usr/local/bin/vkcube && \
+  chmod +x /usr/local/bin/vkcube
 
 COPY --chown=root:root --chmod=755 entrypoint.sh /entrypoint.sh
 COPY xorg.conf /etc/X11/xorg.conf.d/20-virt.conf

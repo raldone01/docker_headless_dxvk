@@ -18,4 +18,7 @@ if [ "$x11_tech" = "xorg" ]; then
   export DISPLAY=:10
 fi
 
+# run x11vnc on port 5900
+x11vnc -forever -shared -display $DISPLAY -rfbport 5900 -verbose -clip xinerama0 -listen 0.0.0.0 -shared
+
 wine /usr/local/bin/d3d11-triangle/d3d11-triangle.exe

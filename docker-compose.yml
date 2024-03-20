@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  dxvk_cpu:
+    restart: no
+    build:
+      context: im_dxvk_cpu
+      dockerfile: Dockerfile
+    ports:
+      - "8087:5900"
+    entrypoint: ["/bin/bash"]
+    stdin_open: true
+    tty: true
+    networks:
+      - test-novnc
+  novnc:
+    restart: unless-stopped
+    image: ghcr.io/raldone01/docker_novnc_proxy/novnc:latest
+    ports:
+      - "8086:8080"
+    environment:
+      - VNC_HOST=dxvk_cpu
+      - VNC_PORT=5900
+    networks:
+      - test-novnc
+networks:
+  test-novnc:
